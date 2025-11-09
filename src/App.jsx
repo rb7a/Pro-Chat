@@ -7,7 +7,7 @@ function App() {
   const [apiKey, setApiKey] = useState(localStorage.getItem('openrouter_api_key') || '')
   const [model, setModel] = useState(localStorage.getItem('openrouter_model') || 'x-ai/grok-4')
   const [contextEnabled, setContextEnabled] = useState(localStorage.getItem('context_enabled') !== 'false')
-  const [memoryEnabled, setMemoryEnabled] = useState(localStorage.getItem('memory_enabled') !== 'false')
+  const [memoryEnabled, setMemoryEnabled] = useState(localStorage.getItem('memory_enabled') === 'true')
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState({ state: 'ready', text: 'Ready' })
   const [showShortcuts, setShowShortcuts] = useState(false)
