@@ -393,19 +393,6 @@ function App() {
               </div>
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={() => setVoiceEnabled(prev => !prev)}
-                  className={`p-2.5 rounded-xl transition-all duration-200 backdrop-blur-xl border ${
-                    voiceEnabled 
-                      ? 'bg-white/90 text-black border-white/20 shadow-lg shadow-white/20' 
-                      : 'bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20'
-                  }`}
-                  title={`Voice Output: ${voiceEnabled ? 'ON' : 'OFF'}`}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                  </svg>
-                </button>
-                <button
                   onClick={() => setShowShortcuts(true)}
                   className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all duration-200 backdrop-blur-xl"
                   title="Keyboard Shortcuts (?)"
@@ -507,25 +494,11 @@ function App() {
                       sendMessage()
                     }
                   }}
-                  className="w-full p-4 pr-14 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all duration-200 placeholder-white/30 text-white/90 shadow-xl shadow-black/20"
+                  className="w-full p-4 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all duration-200 placeholder-white/30 text-white/90 shadow-xl shadow-black/20"
                   placeholder="Type your message... (Enter to send, Shift+Enter for new line)"
                   rows={3}
                   disabled={isLoading}
                 />
-                <button
-                  onClick={toggleVoice}
-                  disabled={!recognitionRef.current}
-                  className={`absolute right-3 top-3 p-2.5 rounded-xl transition-all duration-200 backdrop-blur-xl border ${
-                    isListening 
-                      ? 'bg-white/90 text-black animate-pulse border-white/20 shadow-lg shadow-white/20' 
-                      : 'bg-white/5 hover:bg-white/10 text-white/60 border-white/10 hover:border-white/20'
-                  } disabled:opacity-50 disabled:cursor-not-allowed`}
-                  title="Voice Input (Ctrl+Shift+V)"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                  </svg>
-                </button>
               </div>
               <div className="flex justify-between items-center gap-3">
                 <button
@@ -565,15 +538,6 @@ function App() {
               {status.text}
             </span>
             <div className="flex items-center space-x-4">
-              {voiceEnabled && (
-                <span className="text-white/40 text-xs flex items-center backdrop-blur-sm px-2 py-1 rounded-lg bg-white/5 border border-white/10">
-                  <svg className="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v4a1 1 0 002 0V7z" clipRule="evenodd"/>
-                  </svg>
-                  Voice
-                </span>
-              )}
               <span className="text-white/30 font-mono text-xs px-2 py-1 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">{model.split('/').pop()?.toUpperCase()}</span>
             </div>
           </div>
@@ -616,10 +580,6 @@ function App() {
                 <div className="flex items-center justify-between py-2">
                   <span className="text-gray-300">Toggle sidebar</span>
                   <kbd className="px-2 py-1 bg-zinc-800 border border-zinc-700 rounded text-xs font-mono">Ctrl+B</kbd>
-                </div>
-                <div className="flex items-center justify-between py-2">
-                  <span className="text-gray-300">Voice input</span>
-                  <kbd className="px-2 py-1 bg-zinc-800 border border-zinc-700 rounded text-xs font-mono">Ctrl+Shift+V</kbd>
                 </div>
                 <div className="flex items-center justify-between py-2">
                   <span className="text-gray-300">Open settings</span>
