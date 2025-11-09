@@ -6,6 +6,8 @@ function App() {
   const [messages, setMessages] = useState([])
   const [apiKey, setApiKey] = useState(localStorage.getItem('openrouter_api_key') || '')
   const [model, setModel] = useState(localStorage.getItem('openrouter_model') || 'x-ai/grok-4')
+  const [contextEnabled, setContextEnabled] = useState(localStorage.getItem('context_enabled') !== 'false')
+  const [memoryEnabled, setMemoryEnabled] = useState(localStorage.getItem('memory_enabled') !== 'false')
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState({ state: 'ready', text: 'Ready' })
   const [showShortcuts, setShowShortcuts] = useState(false)
@@ -35,10 +37,12 @@ function App() {
 
   // Save chats to localStorage
   useEffect(() => {
-    if (chats.length > 0) {
+    if (chats.length > 0 && memoryEnabled) {
       localStorage.setItem('pro_chat_history', JSON.stringify(chats))
+    } else if (!memoryEnabled) {
+      localStorage.removeItem('pro_chat_history')
     }
-  }, [chats])
+  }, [chats, memoryEnabled])
 
   // Update current chat messages
   useEffect(() => {
@@ -220,10 +224,24 @@ function App() {
   }
 
   const callAPI = async (message, conversationMessages) => {
-    const conversation = [
-      { role: 'system', content: 'You are a helpful AI assistant. Provide clear, concise responses suitable for technical users.' },
-      ...conversationMessages.map(msg => ({ role: msg.role, content: msg.content }))
+    // Build conversation based on context settings
+    let conversation = [
+      { role: 'system', content: 'You are a helpful AI assistant. Provide clear, concise responses suitable for technical users.' }
     ]
+    
+    if (contextEnabled) {
+      // Include full conversation history
+      conversation = [
+        ...conversation,
+        ...conversationMessages.map(msg => ({ role: msg.role, content: msg.content }))
+      ]
+    } else {
+      // Only include the latest user message
+      const lastMessage = conversationMessages[conversationMessages.length - 1]
+      if (lastMessage) {
+        conversation.push({ role: lastMessage.role, content: lastMessage.content })
+      }
+    }
 
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -288,6 +306,8 @@ function App() {
   const saveSettings = () => {
     localStorage.setItem('openrouter_api_key', apiKey)
     localStorage.setItem('openrouter_model', model)
+    localStorage.setItem('context_enabled', contextEnabled.toString())
+    localStorage.setItem('memory_enabled', memoryEnabled.toString())
     setShowSettings(false)
     setStatus({ state: 'ready', text: 'Settings saved!' })
     setTimeout(() => setStatus({ state: 'ready', text: 'Ready' }), 2000)
@@ -585,6 +605,40 @@ function App() {
                     <option value="qwen/qwen-3-max">Qwen 3 Max</option>
                     <option value="qwen/qwen-3-vl">Qwen 3 VL</option>
                   </select>
+                </div>
+                <div>
+                  <label className="flex items-center justify-between cursor-pointer">
+                    <div>
+                      <div className="text-sm font-medium text-gray-300">Context</div>
+                      <p className="text-xs text-gray-500 mt-0.5">Remember conversation history within each chat</p>
+                    </div>
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={contextEnabled}
+                        onChange={(e) => setContextEnabled(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-zinc-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-white rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-white"></div>
+                    </div>
+                  </label>
+                </div>
+                <div>
+                  <label className="flex items-center justify-between cursor-pointer">
+                    <div>
+                      <div className="text-sm font-medium text-gray-300">Memory</div>
+                      <p className="text-xs text-gray-500 mt-0.5">Save chat history across sessions</p>
+                    </div>
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={memoryEnabled}
+                        onChange={(e) => setMemoryEnabled(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-zinc-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-white rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-white"></div>
+                    </div>
+                  </label>
                 </div>
                 <button
                   onClick={saveSettings}
