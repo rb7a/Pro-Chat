@@ -295,48 +295,44 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-black via-zinc-950 to-black text-gray-100 overflow-hidden relative">
-      {/* Ambient background effects */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900/20 via-transparent to-transparent pointer-events-none"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-zinc-800/10 via-transparent to-transparent pointer-events-none"></div>
-      
+    <div className="flex h-screen bg-white text-gray-900 overflow-hidden">
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-64' : 'w-0'} transition-all duration-300 bg-zinc-900/40 backdrop-blur-2xl border-r border-white/5 flex flex-col overflow-hidden relative z-10`}>
-        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none"></div>
-        
-        <div className="p-4 border-b border-white/5 flex items-center justify-between relative backdrop-blur-sm">
-          <h2 className="text-lg font-semibold text-white/90">Chats</h2>
+      <div className={`${sidebarOpen ? 'w-64' : 'w-0'} transition-all duration-300 bg-black text-white flex flex-col overflow-hidden border-r border-gray-800`}>
+        <div className="p-3 flex items-center justify-between">
           <button
             onClick={createNewChat}
-            className="p-2 hover:bg-white/10 rounded-lg transition-all duration-200 backdrop-blur-sm hover:shadow-lg hover:shadow-white/5"
+            className="flex-1 px-4 py-2.5 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm font-medium"
             title="New Chat (Ctrl+N)"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
+            <span>New chat</span>
           </button>
         </div>
         
-        <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+        <div className="flex-1 overflow-y-auto px-2 py-2 space-y-1 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
           {chats.map(chat => (
             <div
               key={chat.id}
               onClick={() => switchChat(chat.id)}
-              className={`p-3 rounded-xl cursor-pointer group flex items-center justify-between transition-all duration-200 ${
+              className={`px-3 py-2.5 rounded-lg cursor-pointer group flex items-center justify-between transition-all duration-150 ${
                 currentChatId === chat.id 
-                  ? 'bg-white/10 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/20' 
-                  : 'hover:bg-white/5 backdrop-blur-sm border border-transparent hover:border-white/5'
+                  ? 'bg-white/10' 
+                  : 'hover:bg-white/5'
               }`}
             >
-              <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium text-white/90 truncate">{chat.title}</div>
-                <div className="text-xs text-white/40 mt-1">
-                  {new Date(chat.updatedAt).toLocaleDateString()}
+              <div className="flex-1 min-w-0 flex items-center space-x-2">
+                <svg className="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm text-white/90 truncate">{chat.title}</div>
                 </div>
               </div>
               <button
                 onClick={(e) => deleteChat(chat.id, e)}
-                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-white/10 rounded-lg transition-all ml-2 backdrop-blur-sm"
+                className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-white/10 rounded transition-all ml-1"
               >
                 <svg className="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -346,17 +342,16 @@ function App() {
           ))}
           
           {chats.length === 0 && (
-            <div className="text-center text-white/30 text-sm py-8 backdrop-blur-sm">
-              No chats yet<br />
-              Press <kbd className="px-2 py-1 bg-white/5 border border-white/10 rounded text-xs font-mono mt-2 inline-block">Ctrl+N</kbd> to start
+            <div className="text-center text-white/40 text-sm py-8 px-4">
+              No previous chats
             </div>
           )}
         </div>
 
-        <div className="p-4 border-t border-white/5 relative backdrop-blur-sm">
+        <div className="p-3 border-t border-gray-800">
           <button
             onClick={() => setShowSettings(true)}
-            className="w-full p-2.5 bg-white/5 hover:bg-white/10 rounded-xl font-medium transition-all duration-200 flex items-center justify-center space-x-2 backdrop-blur-xl border border-white/10 hover:border-white/20 hover:shadow-lg hover:shadow-black/20"
+            className="w-full px-3 py-2.5 hover:bg-white/5 rounded-lg transition-all duration-200 flex items-center space-x-3 text-sm"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -368,177 +363,143 @@ function App() {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col relative z-10">
+      <div className="flex-1 flex flex-col bg-white">
         {/* Header */}
-        <header className="bg-zinc-900/40 backdrop-blur-2xl border-b border-white/5 relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none"></div>
-          <div className="px-6 py-4 relative">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <button
-                  onClick={() => setSidebarOpen(prev => !prev)}
-                  className="p-2 hover:bg-white/10 rounded-lg transition-all duration-200 backdrop-blur-sm hover:shadow-lg hover:shadow-black/20"
-                  title="Toggle Sidebar (Ctrl+B)"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                </button>
-                <div>
-                  <h1 className="text-xl font-bold text-white/90 tracking-tight">Pro-Chat</h1>
-                  <p className="text-xs text-white/40 mt-0.5">
-                    Press <kbd className="px-1.5 py-0.5 bg-white/5 border border-white/10 rounded text-xs font-mono">?</kbd> for shortcuts
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => setShowShortcuts(true)}
-                  className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all duration-200 backdrop-blur-xl"
-                  title="Keyboard Shortcuts (?)"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </button>
-              </div>
+        <header className="border-b border-gray-200 bg-white/80 backdrop-blur-lg sticky top-0 z-10">
+          <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setSidebarOpen(prev => !prev)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                title="Toggle Sidebar (Ctrl+B)"
+              >
+                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              <h1 className="text-lg font-semibold text-gray-900">Pro-Chat</h1>
+            </div>
+            <div className="flex items-center space-x-1">
+              <button
+                onClick={() => setShowShortcuts(true)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                title="Keyboard Shortcuts (?)"
+              >
+                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </button>
             </div>
           </div>
         </header>
 
         {/* Chat Container */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden bg-white">
           <div
             ref={chatContainerRef}
-            className="h-full overflow-y-auto px-6 py-8 space-y-6 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent"
+            className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
           >
-            {messages.length === 0 ? (
-              <div className="text-center py-16">
-                <div className="max-w-md mx-auto">
-                  <div className="w-20 h-20 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl mx-auto mb-6 flex items-center justify-center border border-white/10 shadow-2xl shadow-black/40">
-                    <svg className="w-10 h-10 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
+            <div className="max-w-3xl mx-auto px-4">
+              {messages.length === 0 ? (
+                <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+                  <div className="text-center max-w-md">
+                    <div className="w-16 h-16 bg-black rounded-2xl mx-auto mb-6 flex items-center justify-center">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                    </div>
+                    <h2 className="text-3xl font-semibold text-gray-900 mb-3">How can I help you today?</h2>
+                    <p className="text-gray-500">
+                      Start a conversation by typing a message below
+                    </p>
                   </div>
-                  <h2 className="text-2xl font-semibold text-white/90 mb-3">Start a Conversation</h2>
-                  <p className="text-white/50 mb-6">
-                    Type your message below to get started
-                  </p>
                 </div>
-              </div>
-            ) : (
-              messages.map((msg, index) => (
-                <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-500`}>
-                  <div className={`max-w-[80%] ${msg.role === 'user' ? 'order-2' : 'order-1'}`}>
-                    <div className={`flex items-start space-x-3 ${msg.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                      <div className={`w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-semibold flex-shrink-0 backdrop-blur-xl transition-all duration-200 ${
-                        msg.role === 'user' 
-                          ? 'bg-gradient-to-br from-white via-white to-white/80 text-black shadow-lg shadow-white/20 border border-white/20' 
-                          : 'bg-white/5 text-white/80 border border-white/10 shadow-lg shadow-black/20'
-                      }`}>
-                        {msg.role === 'user' ? 'U' : 'AI'}
-                      </div>
-                      <div className={`rounded-2xl px-5 py-4 backdrop-blur-2xl transition-all duration-200 hover:shadow-xl ${
-                        msg.role === 'user'
-                          ? 'bg-gradient-to-br from-white/95 via-white/90 to-white/85 text-black border border-white/20 shadow-xl shadow-white/10'
-                          : 'bg-white/5 border border-white/10 text-white/90 shadow-xl shadow-black/20'
-                      }`}>
-                        <div className="text-xs font-semibold mb-2 opacity-60 uppercase tracking-wide">
-                          {msg.role === 'user' ? 'You' : 'Assistant'}
+              ) : (
+                <div className="py-8 space-y-6">
+                  {messages.map((msg, index) => (
+                    <div key={index} className="group">
+                      <div className={`flex items-start space-x-4 ${msg.role === 'user' ? '' : 'bg-gray-50 -mx-4 px-4 py-6'}`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-semibold ${
+                          msg.role === 'user' 
+                            ? 'bg-black text-white' 
+                            : 'bg-gray-900 text-white'
+                        }`}>
+                          {msg.role === 'user' ? 'Y' : 'AI'}
                         </div>
-                        <div className="whitespace-pre-wrap leading-relaxed">{msg.content}</div>
+                        <div className="flex-1 min-w-0 pt-1">
+                          <div className="text-[15px] leading-7 text-gray-900 whitespace-pre-wrap break-words">
+                            {msg.content}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))
-            )}
-            {isLoading && (
-              <div className="flex justify-start animate-in fade-in slide-in-from-bottom-2 duration-500">
-                <div className="max-w-[80%]">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-sm font-semibold text-white/80 backdrop-blur-xl shadow-lg shadow-black/20">
+              )}
+              {isLoading && (
+                <div className="py-6 bg-gray-50 -mx-4 px-4">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center text-sm font-semibold text-white">
                       AI
                     </div>
-                    <div className="bg-white/5 border border-white/10 rounded-2xl px-5 py-4 backdrop-blur-2xl shadow-xl shadow-black/20">
-                      <div className="text-xs font-semibold mb-2 opacity-60 uppercase tracking-wide text-white/80">Assistant</div>
-                      <div className="flex items-center space-x-3">
-                        <div className="flex space-x-1.5">
-                          <div className="w-2 h-2 bg-white/40 rounded-full animate-bounce"></div>
-                          <div className="w-2 h-2 bg-white/40 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                          <div className="w-2 h-2 bg-white/40 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                    <div className="flex-1 pt-1">
+                      <div className="flex items-center space-x-2">
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.15s'}}></div>
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.3s'}}></div>
                         </div>
-                        <span className="text-white/50 text-sm">Thinking...</span>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Input Area */}
-        <div className="bg-zinc-900/40 backdrop-blur-2xl border-t border-white/5 relative">
-          <div className="absolute inset-0 bg-gradient-to-t from-white/[0.02] to-transparent pointer-events-none"></div>
-          <div className="px-6 py-4 relative">
-            <div className="space-y-4">
-              <div className="relative group">
-                <textarea
-                  ref={inputRef}
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault()
-                      sendMessage()
-                    }
-                  }}
-                  className="w-full p-4 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all duration-200 placeholder-white/30 text-white/90 shadow-xl shadow-black/20"
-                  placeholder="Type your message... (Enter to send, Shift+Enter for new line)"
-                  rows={3}
-                  disabled={isLoading}
-                />
-              </div>
-              <div className="flex justify-between items-center gap-3">
-                <button
-                  onClick={clearChat}
-                  className="px-4 py-2.5 bg-white/5 hover:bg-white/10 rounded-xl font-medium transition-all duration-200 flex items-center space-x-2 backdrop-blur-xl border border-white/10 hover:border-white/20"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                  <span>Clear</span>
-                  <kbd className="px-2 py-1 bg-white/5 border border-white/10 rounded text-xs font-mono">Ctrl+L</kbd>
-                </button>
-                <button
-                  onClick={sendMessage}
-                  disabled={isLoading || !inputValue.trim()}
-                  className="px-6 py-2.5 bg-gradient-to-r from-white via-white to-white/90 text-black hover:shadow-2xl hover:shadow-white/20 disabled:from-white/5 disabled:to-white/5 disabled:text-white/30 disabled:cursor-not-allowed rounded-xl font-semibold transition-all duration-200 flex items-center space-x-2 backdrop-blur-xl border border-white/20 disabled:border-white/5"
-                >
-                  <span>{isLoading ? 'Sending...' : 'Send'}</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                  </svg>
-                </button>
-              </div>
+              )}
+              <div className="h-32"></div>
             </div>
           </div>
         </div>
 
-        {/* Status Bar */}
-        <div className="bg-zinc-900/40 backdrop-blur-2xl border-t border-white/5 px-6 py-2.5 relative">
-          <div className="absolute inset-0 bg-gradient-to-t from-white/[0.01] to-transparent pointer-events-none"></div>
-          <div className="flex justify-between items-center text-sm relative">
-            <span className={`font-medium ${
-              status.state === 'error' ? 'text-white/40' : 
-              status.state === 'loading' ? 'text-white/50' : 
-              'text-white/30'
-            }`}>
-              {status.text}
-            </span>
-            <div className="flex items-center space-x-4">
-              <span className="text-white/30 font-mono text-xs px-2 py-1 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">{model.split('/').pop()?.toUpperCase()}</span>
+        {/* Input Area */}
+        <div className="border-t border-gray-200 bg-white">
+          <div className="max-w-3xl mx-auto px-4 py-6">
+            <div className="relative">
+              <textarea
+                ref={inputRef}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault()
+                    sendMessage()
+                  }
+                }}
+                className="w-full px-4 py-3 pr-12 bg-white border border-gray-300 rounded-2xl resize-none focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-all duration-200 placeholder-gray-400 text-gray-900 shadow-sm"
+                placeholder="Message Pro-Chat..."
+                rows={1}
+                style={{minHeight: '52px', maxHeight: '200px'}}
+                disabled={isLoading}
+              />
+              <button
+                onClick={sendMessage}
+                disabled={isLoading || !inputValue.trim()}
+                className="absolute right-3 bottom-3 p-2 bg-black hover:bg-gray-800 disabled:bg-gray-200 disabled:cursor-not-allowed rounded-lg transition-all duration-200"
+                title="Send message"
+              >
+                <svg className={`w-5 h-5 ${isLoading || !inputValue.trim() ? 'text-gray-400' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              </button>
+            </div>
+            <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
+              <div className="flex items-center space-x-3">
+                <span>{model.split('/').pop()?.toUpperCase()}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <kbd className="px-2 py-1 bg-gray-100 border border-gray-200 rounded text-xs font-mono">Enter</kbd>
+                <span>to send</span>
+                <kbd className="px-2 py-1 bg-gray-100 border border-gray-200 rounded text-xs font-mono">Shift+Enter</kbd>
+                <span>for new line</span>
+              </div>
             </div>
           </div>
         </div>
