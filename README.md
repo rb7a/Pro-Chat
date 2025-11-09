@@ -4,18 +4,20 @@
 
 ## Features
 
-- 🎨 **Clean & Minimal Design** - Dark theme with monospace fonts
+- 🎨 **Clean & Minimal Design** - Dark theme with Tailwind CSS
 - ⌨️ **Full Keyboard Navigation** - Every action accessible via keyboard
-- 🚀 **Lightweight** - Vanilla JavaScript, no frameworks or dependencies
+- 🚀 **Lightweight** - Built with React and Vite
 - 🔒 **Privacy-Focused** - API key stored locally, never sent anywhere except OpenAI
 - ⚡ **Fast & Responsive** - Optimized for speed and efficiency
 
 ## Getting Started
 
-1. Open `index.html` in your web browser
-2. Press `Ctrl+,` (or `Cmd+,` on Mac) to open settings
-3. Enter your OpenAI API key
-4. Start chatting!
+1. Install dependencies: `npm install`
+2. Start the development server: `npm run dev`
+3. Open http://localhost:5173 in your browser
+4. Press `Ctrl+,` (or `Cmd+,` on Mac) to open settings
+5. Enter your OpenAI API key
+6. Start chatting!
 
 ## Keyboard Shortcuts
 
@@ -33,9 +35,9 @@
 
 ## Tech Stack
 
-- HTML5
-- CSS3 (with CSS variables for theming)
-- Vanilla JavaScript (ES6+)
+- React 19
+- Vite
+- Tailwind CSS
 - OpenAI API
 
 ## Design Philosophy
