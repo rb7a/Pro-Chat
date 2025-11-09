@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 
 function App() {
   const [messages, setMessages] = useState([])
-  const [apiKey, setApiKey] = useState(localStorage.getItem('ai_api_key') || '')
-  const [model, setModel] = useState(localStorage.getItem('ai_model') || 'grok-4')
+  const [apiKey, setApiKey] = useState(localStorage.getItem('openrouter_api_key') || '')
+  const [model, setModel] = useState(localStorage.getItem('openrouter_model') || 'x-ai/grok-2-1212')
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState({ state: 'ready', text: 'Ready' })
   const [showShortcuts, setShowShortcuts] = useState(false)
@@ -77,26 +77,20 @@ function App() {
       { role: 'user', content: message }
     ]
 
-    // Determine API endpoint and format based on model
-    let apiUrl = 'https://api.openai.com/v1/chat/completions'
-    let headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    }
-    let requestBody = {
-      model,
-      messages: conversation,
-      temperature: 0.7,
-      max_tokens: 2000
-    }
-
-    // Model-specific configurations can be added here
-    // For now, using a generic approach that works with OpenAI-compatible APIs
-
-    const response = await fetch(apiUrl, {
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
-      headers,
-      body: JSON.stringify(requestBody)
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+        'HTTP-Referer': window.location.origin,
+        'X-Title': 'Pro-Chat'
+      },
+      body: JSON.stringify({
+        model,
+        messages: conversation,
+        temperature: 0.7,
+        max_tokens: 2000
+      })
     })
 
     if (!response.ok) {
@@ -115,8 +109,8 @@ function App() {
   }
 
   const saveSettings = () => {
-    localStorage.setItem('ai_api_key', apiKey)
-    localStorage.setItem('ai_model', model)
+    localStorage.setItem('openrouter_api_key', apiKey)
+    localStorage.setItem('openrouter_model', model)
     setShowSettings(false)
     setStatus({ state: 'ready', text: 'Settings saved!' })
     setTimeout(() => setStatus({ state: 'ready', text: 'Ready' }), 2000)
@@ -358,15 +352,15 @@ function App() {
               </div>
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">API Key</label>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">OpenRouter API Key</label>
                   <input
                     type="password"
                     value={apiKey}
                     onChange={(e) => setApiKey(e.target.value)}
                     className="w-full p-3 bg-slate-700/50 backdrop-blur-sm border border-slate-600/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-200 placeholder-slate-400"
-                    placeholder="Enter your API key..."
+                    placeholder="sk-or-v1-..."
                   />
-                  <p className="text-xs text-slate-500 mt-1">Your API key is stored locally and never sent anywhere except the AI provider.</p>
+                  <p className="text-xs text-slate-500 mt-1">Your API key is stored locally and only sent to OpenRouter. Get your key at <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">openrouter.ai/keys</a></p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-300 mb-2">Model</label>
@@ -375,18 +369,18 @@ function App() {
                     onChange={(e) => setModel(e.target.value)}
                     className="w-full p-3 bg-slate-700/50 backdrop-blur-sm border border-slate-600/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-200"
                   >
-                    <option value="grok-4">Grok 4</option>
-                    <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
-                    <option value="claude-sonnet-4.5">Claude Sonnet 4.5</option>
-                    <option value="claude-opus-4.1">Claude Opus 4.1</option>
-                    <option value="kimi-k2-thinking">Kimi K2 Thinking</option>
-                    <option value="minimax-m2">MiniMax M2</option>
-                    <option value="grok-4-fast">Grok 4 Fast</option>
-                    <option value="deepseek-r1">DeepSeek R1</option>
-                    <option value="deepseek-v3">DeepSeek V3</option>
-                    <option value="qwen-3">Qwen 3</option>
-                    <option value="qwen-3-max">Qwen 3 Max</option>
-                    <option value="qwen-3-vl">Qwen 3 VL</option>
+                    <option value="x-ai/grok-2-1212">Grok 2 (1212)</option>
+                    <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash (Free)</option>
+                    <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+                    <option value="anthropic/claude-opus-4-20250514">Claude Opus 4</option>
+                    <option value="moonshot/moonshot-v1-128k">Kimi (Moonshot v1 128k)</option>
+                    <option value="minimax/minimax-01">MiniMax-01</option>
+                    <option value="x-ai/grok-beta">Grok Beta</option>
+                    <option value="deepseek/deepseek-r1">DeepSeek R1</option>
+                    <option value="deepseek/deepseek-chat">DeepSeek V3</option>
+                    <option value="qwen/qwen-2.5-72b-instruct">Qwen 2.5 72B</option>
+                    <option value="qwen/qwq-32b-preview">Qwen QwQ 32B</option>
+                    <option value="qwen/qwen-2-vl-72b-instruct">Qwen 2 VL 72B</option>
                   </select>
                 </div>
                 <button
