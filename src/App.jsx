@@ -7,7 +7,7 @@ function App() {
   const [apiKey, setApiKey] = useState(localStorage.getItem('openrouter_api_key') || '')
   const [model, setModel] = useState(localStorage.getItem('openrouter_model') || 'x-ai/grok-4')
   const [contextEnabled, setContextEnabled] = useState(localStorage.getItem('context_enabled') !== 'false')
-  const [memoryEnabled, setMemoryEnabled] = useState(localStorage.getItem('memory_enabled') === 'true')
+  const [memoryEnabled, setMemoryEnabled] = useState(localStorage.getItem('memory_enabled') !== 'false')
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState({ state: 'ready', text: 'Ready' })
   const [showShortcuts, setShowShortcuts] = useState(false)
@@ -21,28 +21,54 @@ function App() {
   const inputRef = useRef(null)
   const recognitionRef = useRef(null)
 
-  // Load chats from localStorage
+  // Load chats and current chat from localStorage
   useEffect(() => {
-    const savedChats = localStorage.getItem('pro_chat_history')
-    if (savedChats) {
-      const parsedChats = JSON.parse(savedChats)
-      setChats(parsedChats)
-      if (parsedChats.length > 0) {
-        const lastChat = parsedChats[0]
-        setCurrentChatId(lastChat.id)
-        setMessages(lastChat.messages || [])
+    try {
+      const savedChats = localStorage.getItem('pro_chat_history')
+      const savedCurrentChatId = localStorage.getItem('current_chat_id')
+      if (savedChats) {
+        const parsedChats = JSON.parse(savedChats)
+        setChats(parsedChats)
+        if (savedCurrentChatId && parsedChats.find(chat => chat.id === savedCurrentChatId)) {
+          setCurrentChatId(savedCurrentChatId)
+          setMessages(parsedChats.find(chat => chat.id === savedCurrentChatId).messages || [])
+        } else if (parsedChats.length > 0) {
+          setCurrentChatId(parsedChats[0].id)
+          setMessages(parsedChats[0].messages || [])
+        }
       }
+    } catch (error) {
+      console.warn('Failed to load chat history from localStorage:', error)
+      // Clear corrupted data
+      localStorage.removeItem('pro_chat_history')
+      localStorage.removeItem('current_chat_id')
     }
   }, [])
 
-  // Save chats to localStorage
+    // Save chats to localStorage
   useEffect(() => {
-    if (chats.length > 0 && memoryEnabled) {
-      localStorage.setItem('pro_chat_history', JSON.stringify(chats))
-    } else if (!memoryEnabled) {
-      localStorage.removeItem('pro_chat_history')
+    try {
+      if (chats.length > 0 && memoryEnabled) {
+        localStorage.setItem('pro_chat_history', JSON.stringify(chats))
+      } else if (!memoryEnabled) {
+        localStorage.removeItem('pro_chat_history')
+        localStorage.removeItem('current_chat_id')
+      }
+    } catch (error) {
+      console.warn('Failed to save chat history to localStorage:', error)
     }
   }, [chats, memoryEnabled])
+
+  // Save current chat id to localStorage
+  useEffect(() => {
+    try {
+      if (currentChatId && memoryEnabled) {
+        localStorage.setItem('current_chat_id', currentChatId)
+      }
+    } catch (error) {
+      console.warn('Failed to save current chat ID to localStorage:', error)
+    }
+  }, [currentChatId, memoryEnabled])
 
   // Update current chat messages
   useEffect(() => {
@@ -82,9 +108,28 @@ function App() {
     }
   }, [])
 
+  const adjustTextareaHeight = () => {
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto'
+      const scrollHeight = inputRef.current.scrollHeight
+      const newHeight = Math.min(Math.max(scrollHeight, 52), 200)
+      inputRef.current.style.height = newHeight + 'px'
+    }
+  }
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = '52px'
+    }
+  }, [])
+
   useEffect(() => {
     inputRef.current?.focus()
   }, [])
+
+  useEffect(() => {
+    adjustTextareaHeight()
+  }, [inputValue])
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -414,10 +459,6 @@ function App() {
               {messages.length === 0 ? (
                 <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
                   <div className="text-center max-w-md">
-                    <h2 className="text-3xl font-semibold text-neutral-100 mb-3">How can I help you today?</h2>
-                    <p className="text-neutral-400">
-                      Start a conversation by typing a message below
-                    </p>
                   </div>
                 </div>
               ) : (
@@ -481,8 +522,6 @@ function App() {
                 }}
                 className="w-full px-4 py-3 pr-12 bg-neutral-700 border border-neutral-600 rounded-2xl resize-none focus:outline-none focus:border-neutral-500 focus:ring-1 focus:ring-neutral-500 transition-all duration-200 placeholder-neutral-400 text-neutral-100 shadow-sm"
                 placeholder="Message Pro-Chat..."
-                rows={1}
-                style={{minHeight: '52px', maxHeight: '200px'}}
                 disabled={isLoading}
               />
               <button
@@ -604,6 +643,7 @@ function App() {
                     <option value="anthropic/claude-sonnet-4.5" className="bg-neutral-800 text-neutral-100 py-2">Claude Sonnet 4.5</option>
                     <option value="anthropic/claude-opus-4.1" className="bg-neutral-800 text-neutral-100 py-2">Claude Opus 4.1</option>
                     <option value="moonshot/kimi-k2-thinking" className="bg-neutral-800 text-neutral-100 py-2">Kimi K2 Thinking</option>
+                    <option value="moonshotai/kimi-k2:free" className="bg-neutral-800 text-neutral-100 py-2">Kimi Dev 72b (free)</option>
                     <option value="minimax/minimax-m2" className="bg-neutral-800 text-neutral-100 py-2">MiniMax M2</option>
                     <option value="x-ai/grok-4-fast" className="bg-neutral-800 text-neutral-100 py-2">Grok 4 Fast</option>
                     <option value="deepseek/deepseek-r1" className="bg-neutral-800 text-neutral-100 py-2">DeepSeek R1</option>
