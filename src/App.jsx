@@ -315,13 +315,13 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen bg-white text-gray-900 overflow-hidden">
+    <div className="flex h-screen bg-gray-900 text-gray-100 overflow-hidden">
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-64' : 'w-0'} transition-all duration-300 bg-black text-white flex flex-col overflow-hidden border-r border-gray-800`}>
+      <div className={`${sidebarOpen ? 'w-64' : 'w-0'} transition-all duration-300 bg-gray-800 text-gray-100 flex flex-col overflow-hidden border-r border-gray-700`}>
         <div className="p-3 flex items-center justify-between">
           <button
             onClick={createNewChat}
-            className="flex-1 px-4 py-2.5 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm font-medium"
+            className="flex-1 px-4 py-2.5 bg-gray-700 hover:bg-gray-600 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm font-medium"
             title="New Chat (Ctrl+N)"
           >
             <span>New chat</span>
@@ -335,18 +335,18 @@ function App() {
               onClick={() => switchChat(chat.id)}
               className={`px-3 py-2.5 rounded-lg cursor-pointer group flex items-center justify-between transition-all duration-150 ${
                 currentChatId === chat.id 
-                  ? 'bg-white/10' 
-                  : 'hover:bg-white/5'
+                  ? 'bg-gray-700' 
+                  : 'hover:bg-gray-700/50'
               }`}
             >
               <div className="flex-1 min-w-0 flex items-center space-x-2">
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm text-white/90 truncate">{chat.title}</div>
+                  <div className="text-sm text-gray-200 truncate">{chat.title}</div>
                 </div>
               </div>
               <button
                 onClick={(e) => deleteChat(chat.id, e)}
-                className="opacity-0 group-hover:opacity-100 px-2 py-1 hover:bg-white/10 rounded transition-all ml-1 text-white/60 text-sm"
+                className="opacity-0 group-hover:opacity-100 px-2 py-1 hover:bg-gray-600 rounded transition-all ml-1 text-gray-400 text-sm"
               >
                 ×
               </button>
@@ -354,16 +354,16 @@ function App() {
           ))}
           
           {chats.length === 0 && (
-            <div className="text-center text-white/40 text-sm py-8 px-4">
+            <div className="text-center text-gray-500 text-sm py-8 px-4">
               No previous chats
             </div>
           )}
         </div>
 
-        <div className="p-3 border-t border-gray-800">
+        <div className="p-3 border-t border-gray-700">
           <button
             onClick={() => setShowSettings(true)}
-            className="w-full px-3 py-2.5 hover:bg-white/5 rounded-lg transition-all duration-200 flex items-center justify-center text-sm"
+            className="w-full px-3 py-2.5 hover:bg-gray-700 rounded-lg transition-all duration-200 flex items-center justify-center text-sm"
           >
             <span>Settings</span>
           </button>
@@ -371,24 +371,24 @@ function App() {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col bg-white">
+      <div className="flex-1 flex flex-col bg-gray-900">
         {/* Header */}
-        <header className="border-b border-gray-200 bg-white/80 backdrop-blur-lg sticky top-0 z-10">
+        <header className="border-b border-gray-700 bg-gray-800/80 backdrop-blur-lg sticky top-0 z-10">
           <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => setSidebarOpen(prev => !prev)}
-                className="px-3 py-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700 font-medium"
+                className="px-3 py-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-200 font-medium"
                 title="Toggle Sidebar (Ctrl+B)"
               >
                 ☰
               </button>
-              <h1 className="text-lg font-semibold text-gray-900">Pro-Chat</h1>
+              <h1 className="text-lg font-semibold text-gray-100">Pro-Chat</h1>
             </div>
             <div className="flex items-center space-x-1">
               <button
                 onClick={() => setShowShortcuts(true)}
-                className="px-3 py-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700 font-medium"
+                className="px-3 py-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-200 font-medium"
                 title="Keyboard Shortcuts (?)"
               >
                 ?
@@ -398,7 +398,7 @@ function App() {
         </header>
 
         {/* Chat Container */}
-        <div className="flex-1 overflow-hidden bg-white">
+        <div className="flex-1 overflow-hidden bg-gray-900">
           <div
             ref={chatContainerRef}
             className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
@@ -407,8 +407,8 @@ function App() {
               {messages.length === 0 ? (
                 <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
                   <div className="text-center max-w-md">
-                    <h2 className="text-3xl font-semibold text-gray-900 mb-3">How can I help you today?</h2>
-                    <p className="text-gray-500">
+                    <h2 className="text-3xl font-semibold text-gray-100 mb-3">How can I help you today?</h2>
+                    <p className="text-gray-400">
                       Start a conversation by typing a message below
                     </p>
                   </div>
@@ -417,16 +417,16 @@ function App() {
                 <div className="py-8 space-y-6">
                   {messages.map((msg, index) => (
                     <div key={index} className="group">
-                      <div className={`flex items-start space-x-4 ${msg.role === 'user' ? '' : 'bg-gray-50 -mx-4 px-4 py-6'}`}>
+                      <div className={`flex items-start space-x-4 ${msg.role === 'user' ? '' : 'bg-gray-800 -mx-4 px-4 py-6'}`}>
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-semibold ${
                           msg.role === 'user' 
-                            ? 'bg-black text-white' 
-                            : 'bg-gray-900 text-white'
+                            ? 'bg-gray-700 text-gray-100' 
+                            : 'bg-gray-600 text-gray-100'
                         }`}>
                           {msg.role === 'user' ? 'Y' : 'AI'}
                         </div>
                         <div className="flex-1 min-w-0 pt-1">
-                          <div className="text-[15px] leading-7 text-gray-900 whitespace-pre-wrap break-words">
+                          <div className="text-[15px] leading-7 text-gray-100 whitespace-pre-wrap break-words">
                             {msg.content}
                           </div>
                         </div>
@@ -436,17 +436,17 @@ function App() {
                 </div>
               )}
               {isLoading && (
-                <div className="py-6 bg-gray-50 -mx-4 px-4">
+                <div className="py-6 bg-gray-800 -mx-4 px-4">
                   <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center text-sm font-semibold text-white">
+                    <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-sm font-semibold text-gray-100">
                       AI
                     </div>
                     <div className="flex-1 pt-1">
                       <div className="flex items-center space-x-2">
                         <div className="flex space-x-1">
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.15s'}}></div>
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.3s'}}></div>
+                          <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+                          <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{animationDelay: '0.15s'}}></div>
+                          <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{animationDelay: '0.3s'}}></div>
                         </div>
                       </div>
                     </div>
@@ -459,7 +459,7 @@ function App() {
         </div>
 
         {/* Input Area */}
-        <div className="border-t border-gray-200 bg-white">
+        <div className="border-t border-gray-700 bg-gray-800">
           <div className="max-w-3xl mx-auto px-4 py-6">
             <div className="relative">
               <textarea
@@ -472,7 +472,7 @@ function App() {
                     sendMessage()
                   }
                 }}
-                className="w-full px-4 py-3 pr-12 bg-white border border-gray-300 rounded-2xl resize-none focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-all duration-200 placeholder-gray-400 text-gray-900 shadow-sm"
+                className="w-full px-4 py-3 pr-12 bg-gray-700 border border-gray-600 rounded-2xl resize-none focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 transition-all duration-200 placeholder-gray-400 text-gray-100 shadow-sm"
                 placeholder="Message Pro-Chat..."
                 rows={1}
                 style={{minHeight: '52px', maxHeight: '200px'}}
@@ -481,13 +481,13 @@ function App() {
               <button
                 onClick={sendMessage}
                 disabled={isLoading || !inputValue.trim()}
-                className="absolute right-3 bottom-3 w-10 h-10 bg-black hover:bg-gray-800 disabled:bg-gray-200 disabled:cursor-not-allowed rounded-full transition-all duration-200 flex items-center justify-center text-xl font-bold"
+                className="absolute right-3 bottom-3 w-10 h-10 bg-gray-600 hover:bg-gray-500 disabled:bg-gray-700 disabled:cursor-not-allowed rounded-full transition-all duration-200 flex items-center justify-center text-xl font-bold"
                 title="Send message"
               >
-                <span className={isLoading || !inputValue.trim() ? 'text-gray-400' : 'text-white'}>↑</span>
+                <span className={isLoading || !inputValue.trim() ? 'text-gray-500' : 'text-gray-100'}>↑</span>
               </button>
             </div>
-            <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
+            <div className="mt-2 flex items-center justify-between text-xs text-gray-400">
               <div className="flex items-center space-x-3">
                 <span>{model.split('/').pop()?.toUpperCase()}</span>
               </div>
